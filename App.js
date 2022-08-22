@@ -1,17 +1,23 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Dimensions, Platform, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
-const SIZE = 50
+const { width, height } = Dimensions.get('screen')
 export default function App() {
+
+  const Circle = ({ size = 100, zIndex = 5000, target = false }) => {
+    return (
+      <TouchableOpacity key={size.toString()}
+        style={styles.circle(size, zIndex, target)}
+      />
+    )
+  }
 
   return (
     <View style={styles.container}>
-      <View style={styles.mainCircle}>
-        <TouchableOpacity style={styles.target} />
-        <TouchableOpacity style={styles.circle} />
-        <TouchableOpacity style={styles.circle1} />
-        <TouchableOpacity style={styles.circle2} />
+      <View style={styles.numbers}>
+        {[1, 2, 3, 4, 5].map(item => (<Text>{item}</Text>))}
       </View>
+      {[100, 200, 300, 400, 500].map(item => <Circle size={item} />)}
+      <Circle size={10} target={true} />
     </View>
   );
 }
@@ -24,46 +30,23 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     backgroundColor: 'gray'
   },
-  target: {
-    width: 15,
-    height: 15,
-    borderRadius: 10,
-    // borderWidth: 30,
-    // borderColor: "white",
+  numbers: {
     position: 'absolute',
-    backgroundColor: 'red',
-    top: 243,
-    left: 243,
+    top: 300,
+    zIndex: 5000,
+    height: 220,
+    justifyContent: 'space-between'
   },
-  circle: {
-    width: 100,
-    height: 100,
-    borderRadius: 50,
-    borderWidth: 30,
+  circle: (size, zIndex, target) => ({
+    width: size,
+    height: size,
+    borderRadius: (size / 2),
+    borderWidth: target ? 0 : 40,
     borderColor: "white",
     position: 'absolute',
-    backgroundColor: 'transparent',
-    top: 200,
-    left: 200,
-  },
-  circle2: {
-    width: 200,
-    height: 200,
-    borderRadius: 100,
-    borderWidth: 40,
-    borderColor: "white",
-    position: 'absolute',
-    backgroundColor: 'transparent',
-    top: 150,
-    left: 150
-  },
-
-  mainCircle: {
-    width: 500,
-    height: 500,
-    borderRadius: 250,
-    backgroundColor: 'black'
-  },
-
-
+    backgroundColor: target ? 'red' : 'transparent',
+    top: (height / 2) - size / 2,
+    left: (width / 2) - size / 2,
+    zIndex: zIndex - size
+  })
 });
